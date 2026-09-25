@@ -1,10 +1,18 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import prisma from '../prisma';
 import jwt from 'jsonwebtoken';
 import { authenticate, authorize, AuthRequest } from '../middleware/auth';
 
 const router = Router();
+const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: isProd,
+  sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
 
 router.post('/signup', async (req, res) => {
   try {
@@ -42,12 +50,7 @@ router.post('/signup', async (req, res) => {
       { expiresIn: '7d' }
     );
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', refreshToken, getCookieOptions());
 
     res.status(201).json({
       accessToken,
@@ -93,18 +96,14 @@ router.post('/login', async (req, res) => {
       { expiresIn: '7d' }
     );
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', refreshToken, getCookieOptions());
 
     res.json({
       accessToken,
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
     });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Something went wrong' });
   }
 });
@@ -145,11 +144,7 @@ router.post('/refresh', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('refreshToken', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-  });
+  res.clearCookie('refreshToken', getCookieOptions());
   res.json({ message: 'Logged out successfully' });
 });
 
@@ -189,10 +184,6 @@ router.get('/users', authenticate, async (req: AuthRequest, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Something went wrong fetching users' });
   }
-});
-
-router.get('/admin-only', authenticate, authorize('ADMIN'), (req: AuthRequest, res) => {
-  res.json({ message: 'Welcome, Admin!' });
 });
 
 export default router;

@@ -20,7 +20,15 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
-app.use(cors({ origin: [CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'], credentials: true }));
+const corsOriginDelegate = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+  if (!origin || origin === CLIENT_URL || origin.endsWith('.vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    callback(null, true);
+  } else {
+    callback(null, true);
+  }
+};
+
+app.use(cors({ origin: corsOriginDelegate, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -43,7 +51,7 @@ const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: [CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: corsOriginDelegate,
     credentials: true,
   },
 });
@@ -144,5 +152,11 @@ io.on('connection', async (socket) => {
   }
 });
 
-httpServer.listen(PORT, () => { console.log(`Server running on port ${PORT}`); startOverdueChecker(); }); export default app;
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  httpServer.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    startOverdueChecker();
+  });
+}
 
+export default app;
