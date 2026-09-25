@@ -32,15 +32,27 @@ app.use(cors({ origin: corsOriginDelegate, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
+// Dual route mounting to support both local Express & Vercel serverless function prefix stripping
 app.use('/api/auth', authRoutes);
-app.use('/api/projects', projectRoutes);
-app.use('/api/tasks', taskRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/activity', activityRoutes);
-app.use('/api/dashboard', dashboardRoutes);
+app.use('/auth', authRoutes);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.use('/api/projects', projectRoutes);
+app.use('/projects', projectRoutes);
+
+app.use('/api/tasks', taskRoutes);
+app.use('/tasks', taskRoutes);
+
+app.use('/api/notifications', notificationRoutes);
+app.use('/notifications', notificationRoutes);
+
+app.use('/api/activity', activityRoutes);
+app.use('/activity', activityRoutes);
+
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/dashboard', dashboardRoutes);
+
+app.get(['/api/health', '/health'], (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), databaseUrlConfigured: !!process.env.DATABASE_URL });
 });
 
 app.get('/', (req, res) => {
