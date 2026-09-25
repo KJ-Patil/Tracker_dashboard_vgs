@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -144,7 +144,5 @@ io.on('connection', async (socket) => {
   }
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  startOverdueChecker();
-});
+httpServer.listen(PORT, () => { console.log(`Server running on port ${PORT}`); startOverdueChecker(); }); export default app;
+
