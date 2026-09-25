@@ -61,8 +61,8 @@ router.post('/signup', async (req, res) => {
         role: user.role,
       },
     });
-  } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Something went wrong' });
   }
 });
 
@@ -102,9 +102,9 @@ router.post('/login', async (req, res) => {
       accessToken,
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Login error:', err);
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: err?.message || 'Something went wrong' });
   }
 });
 
@@ -138,8 +138,8 @@ router.post('/refresh', async (req, res) => {
       accessToken: newAccessToken,
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
     });
-  } catch (err) {
-    res.status(500).json({ error: 'Something went wrong refreshing token' });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Something went wrong refreshing token' });
   }
 });
 
@@ -160,8 +160,8 @@ router.get('/me', authenticate, async (req: AuthRequest, res) => {
     }
 
     res.json({ user });
-  } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Something went wrong' });
   }
 });
 
@@ -181,8 +181,8 @@ router.get('/users', authenticate, async (req: AuthRequest, res) => {
     });
 
     res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: 'Something went wrong fetching users' });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Something went wrong fetching users' });
   }
 });
 
