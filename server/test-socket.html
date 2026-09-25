@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Socket Test</title></head>
+<body>
+  <h1>Live Activity Feed</h1>
+  <p id="status">Connecting...</p>
+  <ul id="feed"></ul>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io('http://localhost:5000');
+    socket.on('connect', () => {
+      document.getElementById('status').innerText = 'Connected! Socket ID: ' + socket.id;
+    });
+    socket.on('activity', (data) => {
+      const li = document.createElement('li');
+      li.textContent = data.message;
+      document.getElementById('feed').prepend(li);
+    });
+  </script>
+</body>
+</html>
