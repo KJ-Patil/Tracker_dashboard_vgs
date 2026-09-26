@@ -56,7 +56,10 @@ app.get(['/api/health', '/health'], (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('VGS Dashboard API Server is running');
+  var a = 20;
+  var b = 60;
+  var c = a * b;
+  res.send(`VGS Dashboard API Server is running ${c}`);
 });
 
 const httpServer = http.createServer(app);

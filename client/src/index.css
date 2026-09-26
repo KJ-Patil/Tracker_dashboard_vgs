@@ -1,39 +1,495 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root {
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --bento-bg: #f8fafc;
+    --bento-surface: #ffffff;
+    --bento-border: rgba(226, 232, 240, 0.85);
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #0b0f17;
-    color: #e2e8f0;
+    background-color: #f8fafc;
+    background-image: 
+      radial-gradient(rgba(148, 163, 184, 0.24) 1.2px, transparent 1.2px),
+      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.07) 0px, transparent 45%),
+      radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.07) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(244, 63, 94, 0.06) 0px, transparent 45%);
+    background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    background-attachment: fixed;
+    color: #0f172a;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .dark body {
+    background-color: #090d16;
+    background-image: 
+      radial-gradient(rgba(255, 255, 255, 0.07) 1.2px, transparent 1.2px),
+      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 45%),
+      radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.12) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(244, 63, 94, 0.09) 0px, transparent 45%);
+    background-size: 24px 24px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    color: #f1f5f9;
   }
 }
 
+/* Bento Theme Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0f17;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
 
+/* =========================================================
+   BENTO GRID DESIGN SYSTEM TOKENS
+   ========================================================= */
+
+/* Core Bento Card */
+.bento-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 
+    0 4px 20px -2px rgba(15, 23, 42, 0.05),
+    0 1px 3px 0 rgba(15, 23, 42, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.dark .bento-card {
+  background: rgba(17, 24, 39, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 4px 25px -2px rgba(0, 0, 0, 0.5),
+    0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.bento-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 
+    0 14px 34px -4px rgba(99, 102, 241, 0.12),
+    0 4px 12px -2px rgba(15, 23, 42, 0.04);
+}
+
+.dark .bento-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 
+    0 14px 34px -4px rgba(99, 102, 241, 0.2),
+    0 4px 12px -2px rgba(0, 0, 0, 0.6);
+}
+
+/* Inner Bento Sub-tile */
+.bento-subtile {
+  background: rgba(248, 250, 252, 0.85);
+  border-radius: 1rem;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: all 0.2s ease;
+}
+
+.dark .bento-subtile {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.bento-subtile:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(203, 213, 225, 1);
+}
+
+.dark .bento-subtile:hover {
+  background: rgba(30, 41, 59, 0.65);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Legacy/Clay compatibility mapped to Bento System */
+.clay-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 
+    0 4px 20px -2px rgba(15, 23, 42, 0.05),
+    0 1px 3px 0 rgba(15, 23, 42, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .clay-card {
+  background: rgba(17, 24, 39, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 4px 25px -2px rgba(0, 0, 0, 0.5),
+    0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.clay-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 
+    0 14px 34px -4px rgba(99, 102, 241, 0.12),
+    0 4px 12px -2px rgba(15, 23, 42, 0.04);
+}
+
+.dark .clay-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow: 
+    0 14px 34px -4px rgba(99, 102, 241, 0.2),
+    0 4px 12px -2px rgba(0, 0, 0, 0.6);
+}
+
+.clay-card-flat {
+  background: rgba(248, 250, 252, 0.85);
+  border-radius: 1rem;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: all 0.2s ease;
+}
+
+.dark .clay-card-flat {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Bento & Clay Inputs */
+.bento-input,
+.clay-input {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0.875rem;
+  border: 1.5px solid #e2e8f0;
+  color: #0f172a;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.dark .bento-input,
+.dark .clay-input {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.bento-input:focus,
+.clay-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.dark .bento-input:focus,
+.dark .clay-input:focus {
+  border-color: #818cf8;
+  background: rgba(17, 24, 39, 0.95);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35);
+}
+
+/* Bento Primary Button */
+.bento-btn-primary,
+.clay-btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 4px 14px -1px rgba(99, 102, 241, 0.4),
+    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.dark .bento-btn-primary,
+.dark .clay-btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 4px 14px -1px rgba(99, 102, 241, 0.5),
+    0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.bento-btn-primary:hover:not(:disabled),
+.clay-btn-primary:hover:not(:disabled) {
+  transform: translateY(-1.5px);
+  box-shadow: 
+    0 8px 20px -2px rgba(99, 102, 241, 0.5),
+    0 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.bento-btn-primary:active:not(:disabled),
+.clay-btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px -1px rgba(99, 102, 241, 0.4);
+}
+
+/* Bento Secondary Button */
+.bento-btn-secondary,
+.clay-btn-secondary {
+  background: rgba(255, 255, 255, 0.95);
+  color: #334155;
+  font-weight: 500;
+  border-radius: 0.875rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.dark .bento-btn-secondary,
+.dark .clay-btn-secondary {
+  background: rgba(30, 41, 59, 0.85);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.bento-btn-secondary:hover:not(:disabled),
+.clay-btn-secondary:hover:not(:disabled) {
+  color: #0f172a;
+  background: #ffffff;
+  border-color: #cbd5e1;
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+}
+
+.dark .bento-btn-secondary:hover:not(:disabled),
+.dark .clay-btn-secondary:hover:not(:disabled) {
+  color: #ffffff;
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+}
+
+.dark .clay-btn-secondary:hover:not(:disabled) {
+  color: #ffffff;
+  background: #253349;
+  box-shadow: 
+    6px 9px 18px -2px rgba(0, 0, 0, 0.6),
+    -5px -5px 12px 0px rgba(30, 41, 59, 0.45),
+    inset 2px 2px 3px 0px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 4px 0px rgba(0, 0, 0, 0.4);
+}
+
+.clay-btn-secondary:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 
+    1px 2px 5px -1px rgba(148, 163, 184, 0.2),
+    inset 2px 2px 4px 0px rgba(148, 163, 184, 0.3),
+    inset -1px -1px 2px 0px rgba(255, 255, 255, 0.9);
+}
+
+.dark .clay-btn-secondary:active:not(:disabled) {
+  box-shadow: 
+    1px 2px 5px -1px rgba(0, 0, 0, 0.4),
+    inset 2px 2px 4px 0px rgba(0, 0, 0, 0.5),
+    inset -1px -1px 2px 0px rgba(255, 255, 255, 0.05);
+}
+
+/* Clay Badges / Tags */
+.clay-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  box-shadow: 
+    2px 3px 7px -1px rgba(148, 163, 184, 0.28),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 2px 0px rgba(148, 163, 184, 0.2);
+  transition: all 0.15s ease;
+}
+
+.dark .clay-badge {
+  box-shadow: 
+    2px 3px 7px -1px rgba(0, 0, 0, 0.45),
+    -2px -2px 5px 0px rgba(30, 41, 59, 0.3),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.1),
+    inset -1px -1px 2px 0px rgba(0, 0, 0, 0.4);
+}
+
+.clay-badge-rose {
+  background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%);
+  color: #be123c;
+  border: 1px solid #fecdd3;
+  box-shadow: 
+    2px 3px 7px -1px rgba(244, 63, 94, 0.25),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 2px 0px rgba(225, 29, 72, 0.2);
+}
+
+.dark .clay-badge-rose {
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.22) 0%, rgba(159, 18, 57, 0.35) 100%);
+  color: #fda4af;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+}
+
+.clay-badge-amber {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #b45309;
+  border: 1px solid #fde68a;
+  box-shadow: 
+    2px 3px 7px -1px rgba(245, 158, 11, 0.25),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 2px 0px rgba(217, 119, 6, 0.2);
+}
+
+.dark .clay-badge-amber {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.22) 0%, rgba(180, 83, 9, 0.35) 100%);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.clay-badge-emerald {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  box-shadow: 
+    2px 3px 7px -1px rgba(34, 197, 94, 0.25),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 2px 0px rgba(22, 163, 74, 0.2);
+}
+
+.dark .clay-badge-emerald {
+  background: linear-gradient(135deg, rgba(22, 163, 74, 0.22) 0%, rgba(21, 128, 61, 0.35) 100%);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.clay-badge-purple {
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+  color: #7e22ce;
+  border: 1px solid #e9d5ff;
+  box-shadow: 
+    2px 3px 7px -1px rgba(168, 85, 247, 0.25),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 2px 0px rgba(147, 51, 234, 0.2);
+}
+
+.dark .clay-badge-purple {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.22) 0%, rgba(126, 34, 206, 0.35) 100%);
+  color: #d8b4fe;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.clay-badge-indigo {
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
+  box-shadow: 
+    2px 3px 7px -1px rgba(99, 102, 241, 0.25),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 2px 0px rgba(79, 70, 229, 0.2);
+}
+
+.dark .clay-badge-indigo {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.22) 0%, rgba(67, 56, 202, 0.35) 100%);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.clay-badge-sky {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  box-shadow: 
+    2px 3px 7px -1px rgba(14, 165, 233, 0.25),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 2px 0px rgba(2, 132, 199, 0.2);
+}
+
+.dark .clay-badge-sky {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.22) 0%, rgba(3, 105, 161, 0.35) 100%);
+  color: #7dd3fc;
+  border: 1px solid rgba(14, 165, 233, 0.35);
+}
+
+.clay-badge-slate {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  box-shadow: 
+    2px 3px 6px -1px rgba(148, 163, 184, 0.25),
+    -2px -2px 5px 0px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 2px 0px rgba(255, 255, 255, 0.9),
+    inset -1px -1px 2px 0px rgba(148, 163, 184, 0.2);
+}
+
+.dark .clay-badge-slate {
+  background: linear-gradient(135deg, rgba(51, 65, 85, 0.45) 0%, rgba(30, 41, 59, 0.6) 100%);
+  color: #cbd5e1;
+  border: 1px solid rgba(71, 85, 105, 0.45);
+}
+
+/* Clay Modal Container */
+.clay-modal {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    16px 24px 48px -6px rgba(148, 163, 184, 0.45),
+    -10px -10px 28px 0px rgba(255, 255, 255, 0.9),
+    inset 2px 2px 4px 0px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 6px 0px rgba(203, 213, 225, 0.3);
+}
+
+.dark .clay-modal {
+  background: #111827;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    16px 24px 48px -6px rgba(0, 0, 0, 0.8),
+    -10px -10px 28px 0px rgba(30, 41, 59, 0.3),
+    inset 2px 2px 4px 0px rgba(255, 255, 255, 0.08),
+    inset -2px -2px 6px 0px rgba(0, 0, 0, 0.6);
+}
+
+/* Fallback overrides */
 .glass-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+.dark .glass-panel {
   background: #111827;
   border: 1px solid #1f2937;
 }
 
 .glass-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+.dark .glass-card {
   background: #111827;
   border: 1px solid #1f2937;
 }

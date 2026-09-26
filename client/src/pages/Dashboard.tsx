@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, useCallback, useTransition } from 'react';
+import { useEffect, useState, useCallback, useTransition } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
@@ -227,7 +227,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen text-slate-800 dark:text-slate-100 flex flex-col font-sans selection:bg-indigo-200 transition-colors duration-300">
       <Navbar
         notifications={notifications}
         unreadCount={unreadNotifCount}
@@ -237,15 +237,19 @@ export default function Dashboard() {
         onOpenCreateProject={() => setIsProjectModalOpen(true)}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-7">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div>
-            <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-              Dashboard
-              
-            </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Welcome back, {user?.name}
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">
+                Project Hub Dashboard
+              </h1>
+              <span className="bento-badge px-2.5 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                {user?.role?.replace('_', ' ')}
+              </span>
+            </div>
+            <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mt-1 transition-colors">
+              Welcome back, <strong className="text-slate-900 dark:text-white font-extrabold">{user?.name}</strong>. Here is your team's live project velocity.
             </p>
           </div>
 
@@ -253,13 +257,13 @@ export default function Dashboard() {
             <div className="flex lg:hidden items-center gap-2">
               <button
                 onClick={() => setIsProjectModalOpen(true)}
-                className="px-2.5 py-1 text-xs text-slate-300 bg-slate-800 border border-slate-700 rounded cursor-pointer"
+                className="bento-btn-secondary px-3 py-1.5 text-xs font-semibold"
               >
                 + Project
               </button>
               <button
                 onClick={() => setIsTaskModalOpen(true)}
-                className="px-2.5 py-1 text-xs text-white bg-indigo-600 rounded cursor-pointer"
+                className="bento-btn-primary px-3.5 py-1.5 text-xs font-bold"
               >
                 + Task
               </button>
@@ -267,7 +271,15 @@ export default function Dashboard() {
           )}
         </div>
 
-        <MetricsHeader stats={stats} currentUser={user} onlineCount={onlineCount} />
+        <MetricsHeader
+          stats={stats}
+          currentUser={user}
+          onlineCount={onlineCount}
+          onOpenCreateTask={() => setIsTaskModalOpen(true)}
+          onOpenCreateProject={() => setIsProjectModalOpen(true)}
+          onFilterStatus={(status) => handleFilterChange('status', status)}
+          onFilterOverdue={() => handleFilterChange('isOverdue', true)}
+        />
 
         <TaskFilterBar
           status={filterStatus}
