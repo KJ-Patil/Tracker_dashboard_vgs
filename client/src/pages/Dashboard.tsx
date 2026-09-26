@@ -227,7 +227,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen text-slate-800 dark:text-slate-100 flex flex-col font-sans selection:bg-indigo-200 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50/70 dark:bg-[#090d16] text-slate-800 dark:text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white transition-colors duration-300">
       <Navbar
         notifications={notifications}
         unreadCount={unreadNotifCount}

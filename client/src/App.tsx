@@ -9,7 +9,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#edf2f7] flex items-center justify-center text-slate-700">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex items-center justify-center text-slate-700 dark:text-slate-300">
         <div className="clay-card p-6 flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="text-xs uppercase tracking-widest text-slate-500 font-mono font-semibold">Authenticating VGS Session...</span>
@@ -30,7 +30,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#edf2f7] flex items-center justify-center text-slate-700">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex items-center justify-center text-slate-700 dark:text-slate-300">
         <div className="clay-card p-6 flex items-center justify-center">
           <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
